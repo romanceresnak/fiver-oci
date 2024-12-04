@@ -1,10 +1,13 @@
+data "oci_identity_availability_domains" "ads" {
+  compartment_id = var.compartment_id
+}
 
 module "oci_database" {
   source = "./modules/oci_database"
 
   region                  = "us-ashburn-1"
-  availability_domain     = "some-ad"
-  compartment_id          = "ocid1.compartment.oc1..example" 
+  availability_domain     = data.oci_identity_availability_domains.ads.availability_domains[0].name
+  compartment_id          = var.compartment_id
   db_system_display_name  = "my-database-system"
   shape                   = "VM.Standard2.1"
   database_edition        = "ENTERPRISE_EDITION"
