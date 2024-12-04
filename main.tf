@@ -2,6 +2,22 @@ data "oci_identity_availability_domains" "ads" {
   compartment_id = var.compartment_id
 }
 
+# Fetch the VCN ID by its display name
+data "oci_core_vcns" "vcns" {
+  compartment_id = var.compartment_id
+}
+
+data "oci_core_vcn" "vcn" {
+  compartment_id = var.compartment_id
+  vcn_id         = data.oci_core_vcns.vcns.vcns[0].id
+}
+
+# Fetch the subnets in the VCN
+data "oci_core_subnets" "subnets" {
+  compartment_id = var.compartment_id
+  vcn_id         = data.oci_core_vcn.vcn.id
+}
+
 module "oci_database" {
   source = "./modules/oci_database"
 
@@ -21,6 +37,6 @@ module "oci_database" {
   db_workload             = "OLTP"
   db_version              = "19.24.0.0"
   backup_network_nsg_ids  = []
-  subnet_id               = "ocid1.subnet.oc1..example"
+  subnet_id               = data.oci_core_subnets.subnets.subnets[0].id
   ssh_public_keys         = ["ssh-rsa AAAAB3..."]
 }
