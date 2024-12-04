@@ -18,6 +18,10 @@ data "oci_core_subnets" "subnets" {
   vcn_id         = data.oci_core_vcn.vcn.id
 }
 
+data "local_file" "ssh_public_key" {
+  filename = var.ssh_key_path
+}
+
 module "oci_database" {
   source = "./modules/oci_database"
 
@@ -38,5 +42,5 @@ module "oci_database" {
   db_version              = "19.24.0.0"
   backup_network_nsg_ids  = []
   subnet_id               = data.oci_core_subnets.subnets.subnets[0].id
-  ssh_public_keys         = ["ssh-rsa AAAAB3..."]
+  ssh_public_keys         = [data.local_file.ssh_public_key.content]
 }
