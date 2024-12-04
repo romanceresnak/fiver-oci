@@ -18,6 +18,7 @@ The public key will be saved as ~/.ssh/oci_rsa.pub.
 
 
 2. Add the Public Key to Terraform
+
 Once you have the public key, you can include it in your Terraform configuration.
 
 Open the public key file:
@@ -25,8 +26,10 @@ Open the public key file:
 bash
 
 cat ~/.ssh/oci_rsa.pub
+
 The content will look like:
 
 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAr1Cg==... user@hostname
+
 Add this public key in your Terraform configuration.
 
